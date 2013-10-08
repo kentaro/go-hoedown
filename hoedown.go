@@ -5,7 +5,15 @@ package hoedown
 import "C"
 import "unsafe"
 
-func Markdown(src string) string {
+type Hoedown struct {
+
+}
+
+func NewHoedown() *Hoedown {
+    return &Hoedown{}
+}
+
+func (self *Hoedown)Markdown(src string) string {
 	c_str := C.CString(src)
 	defer C.free(unsafe.Pointer(c_str))
 	c_dst := C.markdown_render(c_str)

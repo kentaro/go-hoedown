@@ -6,9 +6,19 @@ import (
 )
 
 func TestHowdown(t *testing.T) {
-	Describe(t, "Markdown", func() {
-		It("evaluates actual == expected", func() {
-			Expect(Markdown("# Hoedown")).To(Equal, "<h1>Hoedown</h1>\n")
+	Describe(t, "NewHoedown", func() {
+		hoedown := NewHoedown()
+
+		It("should return a new instance of Hoedown", func() {
+			Expect(hoedown).To(Exist)
+		})
+	})
+
+	Describe(t, "hoedown.Markdown", func() {
+		hoedown := NewHoedown()
+
+		It("should render HTML from markdown string", func() {
+			Expect(hoedown.Markdown("# Hoedown")).To(Equal, "<h1>Hoedown</h1>\n")
 		})
 	})
 }
