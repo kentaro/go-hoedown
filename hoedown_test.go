@@ -8,8 +8,12 @@ import (
 
 func TestHowdown(t *testing.T) {
 	Describe(t, "hoedown.Render", func() {
-		hoedown := NewHoedown(0, 0, 0)
-		buffer  := bytes.NewBuffer([]byte{})
+		hoedown := NewHoedown(map[string]uint{
+			"extensions":  0,
+			"renderModes": 0,
+			"maxNesting":  0,
+		})
+		buffer := bytes.NewBuffer([]byte{})
 		hoedown.RenderHTML(buffer, []byte("# Hoedown"))
 
 		It("should render HTML from markdown string", func() {

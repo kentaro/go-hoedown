@@ -60,21 +60,21 @@ const (
 type Hoedown struct {
 	extensions      uint
 	renderModes     uint
-	maxNesting      uint16
+	maxNesting      uint
 	tocNestingLevel uint
 	callbacks       C.struct_hoedown_callbacks
 	options         C.struct_hoedown_html_renderopt
 }
 
-func NewHoedown(extensions, renderModes uint, maxNesting uint16) *Hoedown {
-	if maxNesting == 0 {
-		maxNesting = 16
+func NewHoedown(options map[string]uint) *Hoedown {
+	if options["maxNesting"] == 0 {
+		options["maxNesting"] = 16
 	}
 
 	return &Hoedown{
-		extensions:  extensions,
-		renderModes: renderModes,
-		maxNesting:  maxNesting,
+		extensions:  options["extensions"],
+		renderModes: options["renderModes"],
+		maxNesting:  options["maxNesting"],
 	}
 }
 
