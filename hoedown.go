@@ -6,6 +6,7 @@ package hoedown
 import "C"
 
 import (
+	"errors"
 	"io"
 	"unsafe"
 )
@@ -48,12 +49,12 @@ const (
 )
 
 const (
-	HTMLRenderer = iota
-	HTMLTocRenderer
+	htmlRenderer = iota
+	htmlTocRenderer
 )
 
 const (
-	output_uint = 64
+	buffSize = 64
 )
 
 type Hoedown struct {
@@ -77,22 +78,25 @@ func NewHoedown(extensions, renderModes uint, maxNesting uint16) *Hoedown {
 	}
 }
 
-func (self *Hoedown) WriteHTML(writer io.Writer, src []byte) (n int, err error) {
-    return self.write(HTMLRenderer, writer, src)
+func (self *Hoedown) RenderHTML(writer io.Writer, src []byte) (n int, err error) {
+    return self.render(htmlRenderer, writer, src)
 }
 
-func (self *Hoedown) WriteHTMLToc(writer io.Writer, src []byte) (n int, err error) {
-    return self.write(HTMLTocRenderer, writer, src)
+func (self *Hoedown) RenderToc(writer io.Writer, src []byte) (n int, err error) {
+    return self.render(htmlTocRenderer, writer, src)
 }
 
-func (self *Hoedown) write(renderer int, writer io.Writer, src []byte) (n int, err error) {
-	ob := C.hoedown_buffer_new(output_uint)
+func (self *Hoedown) render(renderer int, writer io.Writer, src []byte) (n int, err error) {
+	ob := C.hoedown_buffer_new(buffSize)
 
-	if renderer == HTMLRenderer {
+	switch renderer {
+    case htmlRenderer:
 		C.hoedown_html_renderer(&self.callbacks, &self.options, C.uint(self.renderModes), C.int(self.tocNestingLevel))
-	} else if renderer == HTMLTocRenderer {
+    case htmlTocRenderer:
 		C.hoedown_html_toc_renderer(&self.callbacks, &self.options, C.int(self.tocNestingLevel))
-	}
+    default:
+        return 0, errors.New("Unsupported renderer")
+    }
 
 	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), &self.callbacks, unsafe.Pointer(&self.options))
 
