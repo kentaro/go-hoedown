@@ -1,5 +1,5 @@
-#include "hoedown/src/markdown.h"
-#include "hoedown/src/html.h"
+#include "markdown.h"
+#include "html.h"
 #include <string.h>
 
 const char* markdown_render(char* src)

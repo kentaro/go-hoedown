@@ -1,6 +1,6 @@
 package hoedown
 
-// #cgo LDFLAGS: -L/Users/kentaro/.go/src/github.com/kentaro/hoedown/hoedown -lhoedown
+// #cgo CFLAGS: -c -g -O3 -Wall -Wextra -Wno-unused-parameter
 // #include "hoedown.h"
 import "C"
 import "unsafe"
