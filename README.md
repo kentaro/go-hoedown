@@ -12,12 +12,12 @@ import (
         "os"
 )
 
-hoedown := NewHoedown(map[string]uint{
+parser := hoedown.NewHoedown(map[string]uint{
         "extensions":  hoedown.EXT_NO_INTRA_EMPHASIS | hoedown.EXT_AUTOLINK,
         "renderModes": hoedown.HTML_USE_XHTML | HTML_ESCAPE,
         "maxNesting":  16,
 })
-hoedown.RenderHTML(os.Stdout, []byte("# Hoedown"))
+parser.RenderHTML(os.Stdout, []byte("# Hoedown"))
 ```
 
 ### Extensions
