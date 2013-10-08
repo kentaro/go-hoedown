@@ -7,16 +7,8 @@ import (
 )
 
 func TestHowdown(t *testing.T) {
-	Describe(t, "NewHoedown", func() {
-		hoedown := NewHoedown()
-
-		It("should return a new instance of Hoedown", func() {
-			Expect(hoedown).To(Exist)
-		})
-	})
-
 	Describe(t, "hoedown.Render", func() {
-		hoedown := NewHoedown()
+		hoedown := NewHoedown(0, 0, 0)
 		buffer  := bytes.NewBuffer([]byte{})
 		hoedown.Write(buffer, []byte("# Hoedown"))
 
