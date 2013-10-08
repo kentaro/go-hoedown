@@ -2,7 +2,7 @@
 
 This is Go-bindings for [Hoedown](https://github.com/hoedown/hoedown) Markdown parser.
 
-## USAGE
+## Usage
 
 ```go
 package main
