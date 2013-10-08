@@ -14,11 +14,11 @@ func TestHowdown(t *testing.T) {
 		})
 	})
 
-	Describe(t, "hoedown.Markdown", func() {
+	Describe(t, "hoedown.Render", func() {
 		hoedown := NewHoedown()
 
 		It("should render HTML from markdown string", func() {
-			Expect(hoedown.Markdown("# Hoedown")).To(Equal, "<h1>Hoedown</h1>\n")
+			Expect(hoedown.Render("# Hoedown")).To(Equal, "<h1>Hoedown</h1>\n")
 		})
 	})
 }

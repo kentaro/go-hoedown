@@ -13,7 +13,7 @@ func NewHoedown() *Hoedown {
     return &Hoedown{}
 }
 
-func (self *Hoedown)Markdown(src string) string {
+func (self *Hoedown)Render(src string) string {
 	c_str := C.CString(src)
 	defer C.free(unsafe.Pointer(c_str))
 	c_dst := C.markdown_render(c_str)
