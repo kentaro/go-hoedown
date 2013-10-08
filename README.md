@@ -1,6 +1,6 @@
 # go-hoedown
 
-This is Go-bindings for [Howdown](https://github.com/hoedown/hoedown) Markdown parser.
+This is Go-bindings for [Hoedown](https://github.com/hoedown/hoedown) Markdown parser.
 
 ## USAGE
 
