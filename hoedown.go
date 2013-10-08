@@ -4,8 +4,11 @@ package hoedown
 // #include "markdown.h"
 // #include "html.h"
 import "C"
-import "io"
-import "unsafe"
+
+import (
+	"io"
+	"unsafe"
+)
 
 // Hoedown version
 const (
@@ -45,6 +48,11 @@ const (
 )
 
 const (
+	HTMLRenderer = iota
+	HTMLTocRenderer
+)
+
+const (
 	output_uint = 64
 )
 
@@ -53,12 +61,14 @@ type Hoedown struct {
 	renderModes     uint
 	maxNesting      uint16
 	tocNestingLevel uint
+	callbacks       C.struct_hoedown_callbacks
+	options         C.struct_hoedown_html_renderopt
 }
 
 func NewHoedown(extensions, renderModes uint, maxNesting uint16) *Hoedown {
-    if maxNesting == 0 {
-        maxNesting = 16
-    }
+	if maxNesting == 0 {
+		maxNesting = 16
+	}
 
 	return &Hoedown{
 		extensions:  extensions,
@@ -67,13 +77,24 @@ func NewHoedown(extensions, renderModes uint, maxNesting uint16) *Hoedown {
 	}
 }
 
-func (self *Hoedown) Write(writer io.Writer, src []byte) (n int, err error) {
-	var callbacks C.struct_hoedown_callbacks
-	var options C.struct_hoedown_html_renderopt
+func (self *Hoedown) WriteHTML(writer io.Writer, src []byte) (n int, err error) {
+    return self.write(HTMLRenderer, writer, src)
+}
 
+func (self *Hoedown) WriteHTMLToc(writer io.Writer, src []byte) (n int, err error) {
+    return self.write(HTMLTocRenderer, writer, src)
+}
+
+func (self *Hoedown) write(renderer int, writer io.Writer, src []byte) (n int, err error) {
 	ob := C.hoedown_buffer_new(output_uint)
-	C.hoedown_html_renderer(&callbacks, &options, C.uint(self.renderModes), C.int(self.tocNestingLevel))
-	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), &callbacks, unsafe.Pointer(&options))
+
+	if renderer == HTMLRenderer {
+		C.hoedown_html_renderer(&self.callbacks, &self.options, C.uint(self.renderModes), C.int(self.tocNestingLevel))
+	} else if renderer == HTMLTocRenderer {
+		C.hoedown_html_toc_renderer(&self.callbacks, &self.options, C.int(self.tocNestingLevel))
+	}
+
+	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), &self.callbacks, unsafe.Pointer(&self.options))
 
 	C.hoedown_markdown_render(ob, (*C.uint8_t)(unsafe.Pointer(&src[0])), C.size_t(len(src)), markdown)
 	C.hoedown_markdown_free(markdown)
