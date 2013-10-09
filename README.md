@@ -16,7 +16,6 @@ func main () {
     parser := hoedown.NewHoedown(map[string]uint{
         "extensions":  hoedown.EXT_NO_INTRA_EMPHASIS | hoedown.EXT_AUTOLINK,
         "renderModes": hoedown.HTML_USE_XHTML | hoedown.HTML_ESCAPE,
-        "maxNesting":  16,
     })
     parser.Markdown(os.Stdout, []byte("# Hoedown"))
 }
