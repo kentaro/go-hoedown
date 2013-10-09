@@ -78,11 +78,11 @@ func NewHoedown(options map[string]uint) *Hoedown {
 	}
 }
 
-func (self *Hoedown) RenderHTML(writer io.Writer, src []byte) (n int, err error) {
+func (self *Hoedown) Markdown(writer io.Writer, src []byte) (n int, err error) {
     return self.render(htmlRenderer, writer, src)
 }
 
-func (self *Hoedown) RenderToc(writer io.Writer, src []byte) (n int, err error) {
+func (self *Hoedown) MarkdownTOC(writer io.Writer, src []byte) (n int, err error) {
     return self.render(htmlTocRenderer, writer, src)
 }
 

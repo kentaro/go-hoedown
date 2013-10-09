@@ -18,7 +18,7 @@ func main () {
         "renderModes": hoedown.HTML_USE_XHTML | hoedown.HTML_ESCAPE,
         "maxNesting":  16,
     })
-    parser.RenderHTML(os.Stdout, []byte("# Hoedown"))
+    parser.Markdown(os.Stdout, []byte("# Hoedown"))
 }
 ```
 

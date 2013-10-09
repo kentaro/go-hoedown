@@ -14,7 +14,7 @@ func TestHowdown(t *testing.T) {
 			"maxNesting":  0,
 		})
 		buffer := bytes.NewBuffer([]byte{})
-		hoedown.RenderHTML(buffer, []byte("# Hoedown"))
+		hoedown.Markdown(buffer, []byte("# Hoedown"))
 
 		It("should render HTML from markdown string", func() {
 			Expect(buffer.String()).To(Equal, "<h1>Hoedown</h1>\n")
