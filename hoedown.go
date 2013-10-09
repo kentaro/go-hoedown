@@ -70,33 +70,37 @@ func NewHoedown(options map[string]uint) *Hoedown {
 	if options["maxNesting"] == 0 {
 		options["maxNesting"] = 16
 	}
+	if options["tocNestingLevel"] == 0 {
+		options["tocNestingLevel"] = 99
+	}
 
 	return &Hoedown{
-		extensions:  options["extensions"],
-		renderModes: options["renderModes"],
-		maxNesting:  options["maxNesting"],
+		extensions:      options["extensions"],
+		renderModes:     options["renderModes"],
+		maxNesting:      options["maxNesting"],
+		tocNestingLevel: options["tocNestingLevel"],
 	}
 }
 
 func (self *Hoedown) Markdown(writer io.Writer, src []byte) (n int, err error) {
-    return self.render(htmlRenderer, writer, src)
+	return self.render(htmlRenderer, writer, src)
 }
 
 func (self *Hoedown) MarkdownTOC(writer io.Writer, src []byte) (n int, err error) {
-    return self.render(htmlTocRenderer, writer, src)
+	return self.render(htmlTocRenderer, writer, src)
 }
 
 func (self *Hoedown) render(renderer int, writer io.Writer, src []byte) (n int, err error) {
 	ob := C.hoedown_buffer_new(buffSize)
 
 	switch renderer {
-    case htmlRenderer:
+	case htmlRenderer:
 		C.hoedown_html_renderer(&self.callbacks, &self.options, C.uint(self.renderModes), C.int(self.tocNestingLevel))
-    case htmlTocRenderer:
+	case htmlTocRenderer:
 		C.hoedown_html_toc_renderer(&self.callbacks, &self.options, C.int(self.tocNestingLevel))
-    default:
-        return 0, errors.New("Unsupported renderer")
-    }
+	default:
+		return 0, errors.New("Unsupported renderer")
+	}
 
 	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), &self.callbacks, unsafe.Pointer(&self.options))
 

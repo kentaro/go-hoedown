@@ -17,7 +17,7 @@ func TestHowdown(t *testing.T) {
 			hoedown.Markdown(buffer, []byte("# Hoedown"))
 
 			It("should render HTML from markdown string", func() {
-				Expect(buffer.String()).To(Equal, "<h1>Hoedown</h1>\n")
+				Expect(buffer.String()).To(Equal, "<h1 id=\"toc_0\">Hoedown</h1>\n")
 			})
 		})
 
@@ -30,7 +30,7 @@ func TestHowdown(t *testing.T) {
 			hoedown.Markdown(buffer, []byte("# あいう"))
 
 			It("should render HTML from markdown string", func() {
-				Expect(buffer.String()).To(Equal, "<h1>あいう</h1>\n")
+				Expect(buffer.String()).To(Equal, "<h1 id=\"toc_0\">あいう</h1>\n")
 			})
 		})
 
@@ -57,6 +57,58 @@ func TestHowdown(t *testing.T) {
 
 			It("should render HTML from markdown string", func() {
 				Expect(buffer.String()).To(Equal, "<p><img src=\"http://example.com/test.jpg\" alt=\"test\"/></p>\n")
+			})
+		})
+	})
+
+	Describe(t, "hoedown.MarkdownTOC", func() {
+		src := []byte(`
+# 1
+## 1.1
+### 1.1.1
+## 1.2
+### 1.2.1
+# 2
+## 2.2`)
+
+		Context("when some a toc passed", func() {
+			hoedown := NewHoedown(map[string]uint{})
+			buffer := bytes.NewBuffer([]byte{})
+			hoedown.MarkdownTOC(buffer, src)
+
+			It("should render the toc as a list", func() {
+				Expect(buffer.String()).To(Equal, `<ul>
+<li>
+<a href="#toc_0">1</a>
+<ul>
+<li>
+<a href="#toc_1">1.1</a>
+<ul>
+<li>
+<a href="#toc_2">1.1.1</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_3">1.2</a>
+<ul>
+<li>
+<a href="#toc_4">1.2.1</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_5">2</a>
+<ul>
+<li>
+<a href="#toc_6">2.2</a>
+</li>
+</ul>
+</li>
+</ul>
+`)
 			})
 		})
 	})
