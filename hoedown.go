@@ -90,19 +90,20 @@ func (self *Hoedown) MarkdownTOC(writer io.Writer, src []byte) (n int, err error
 	return self.render(htmlTocRenderer, writer, src)
 }
 
-func (self *Hoedown) render(renderer int, writer io.Writer, src []byte) (n int, err error) {
+func (self *Hoedown) render(rendererType int, writer io.Writer, src []byte) (n int, err error) {
+	renderer := new(C.struct_hoedown_renderer)
 	ob := C.hoedown_buffer_new(buffSize)
 
-	switch renderer {
+	switch rendererType {
 	case htmlRenderer:
-		C.hoedown_html_renderer(&self.callbacks, &self.options, C.uint(self.renderModes), C.int(self.tocNestingLevel))
+		renderer = C.hoedown_html_renderer_new(C.uint(self.renderModes), C.int(self.tocNestingLevel))
 	case htmlTocRenderer:
-		C.hoedown_html_toc_renderer(&self.callbacks, &self.options, C.int(self.tocNestingLevel))
+		renderer = C.hoedown_html_toc_renderer_new(C.int(self.tocNestingLevel))
 	default:
 		return 0, errors.New("Unsupported renderer")
 	}
 
-	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), &self.callbacks, unsafe.Pointer(&self.options))
+	markdown := C.hoedown_markdown_new(C.uint(self.extensions), C.size_t(self.maxNesting), renderer)
 
 	C.hoedown_markdown_render(ob, (*C.uint8_t)(unsafe.Pointer(&src[0])), C.size_t(len(src)), markdown)
 	C.hoedown_markdown_free(markdown)
