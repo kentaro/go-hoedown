@@ -1,6 +1,6 @@
 package hoedown
 
-// #cgo CFLAGS: -c -g -O3 -Wall -Wextra -Wno-unused-parameter
+// #cgo CFLAGS: -g -O3 -Wall -Wextra -Wno-unused-parameter
 // #include "markdown.h"
 // #include "html.h"
 import "C"
