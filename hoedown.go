@@ -1,8 +1,16 @@
 package hoedown
 
-// #cgo CFLAGS: -g -O3 -Wall -Wextra -Wno-unused-parameter
+// #cgo CFLAGS: -g -O3 -Wall -Wextra -Wno-unused-parameter -I${SRCDIR}/hoedown/src
 // #include "markdown.h"
 // #include "html.h"
+// #include "autolink.c"
+// #include "buffer.c"
+// #include "escape.c"
+// #include "html.c"
+// #include "html_blocks.c"
+// #include "html_smartypants.c"
+// #include "markdown.c"
+// #include "stack.c"
 import "C"
 
 import (
